@@ -21,20 +21,13 @@ def parse_args():
     parser.add_argument('--gpu', default=-1, type=int)
     return parser.parse_args()
 
-def padding(text, limit):
-    length = len(text)
-    if length < limit:
-        text = text + [0] * (limit - length)
-    return text
-
 def main(args):
     data_home = args.data_home
     train = fetch_20newsgroups(data_home=data_home, subset='train')
     test = fetch_20newsgroups(data_home=data_home, subset='test')
-    one_of_m = OneOfMEncoder(char_table, char_table['unk'])
-    length = args.length
-    text_train = [[padding(one_of_m.encode(d[:length]), length)] for d in train.data]
-    text_test = [[padding(one_of_m.encode(d[:length]), length)] for d in test.data]
+    one_of_m = OneOfMEncoder(char_table, char_table['unk'], args.length)
+    text_train = [[one_of_m.encode(d)] for d in train.data]
+    text_test = [[one_of_m.encode(d)] for d in test.data]
     label_train = train.target
     label_test = test.target
 
