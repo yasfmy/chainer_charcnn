@@ -34,17 +34,17 @@ class CharCNN(BaseModel):
         y = self.__forward(x)
         return F.accuracy(y, t)
 
-   def __forward(self, x, train=False):
-       h = F.relu(self.conv1(x))
-       h = F.max_pooling_2d(h, (1, 3), stride=3)
-       h = F.relu(self.conv2(h))
-       h = F.max_pooling_2d(h, (1, 3), stride=3)
-       h = F.relu(self.conv3(h))
-       h = F.relu(self.conv4(h))
-       h = F.relu(self.conv5(h))
-       h = F.relu(self.conv6(h))
-       h = F.max_pooling_2d(h, (1, 3), stride=3)
-       h = F.dropout(F.relu(self.fc1(h)), ratio=0.5, train=train)
-       h = F.dropout(F.relu(self.fc2(h)), ratio=0.5, train=train)
-       y = self.fc3(h)
-       return y
+    def __forward(self, x, train=False):
+        h = F.relu(self.conv1(x))
+        h = F.max_pooling_2d(h, (1, 3), stride=3)
+        h = F.relu(self.conv2(h))
+        h = F.max_pooling_2d(h, (1, 3), stride=3)
+        h = F.relu(self.conv3(h))
+        h = F.relu(self.conv4(h))
+        h = F.relu(self.conv5(h))
+        h = F.relu(self.conv6(h))
+        h = F.max_pooling_2d(h, (1, 3), stride=3)
+        h = F.dropout(F.relu(self.fc1(h)), ratio=0.5, train=train)
+        h = F.dropout(F.relu(self.fc2(h)), ratio=0.5, train=train)
+        y = self.fc3(h)
+        return y
