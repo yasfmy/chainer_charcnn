@@ -3,8 +3,8 @@ from math import ceil
 import chainer
 import chainer.functions as F
 import chainer.links as L
-from chainer import import cuda
-from chainer import import serializers
+from chainer import cuda
+from chainer import serializers
 
 class BaseModel(chainer.Chain):
     def use_gpu(self, gpu_id):
