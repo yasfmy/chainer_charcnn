@@ -2,6 +2,7 @@ import os
 from argparse import ArgumentParser
 
 import numpy as np
+import chainer
 from chainer import optimizers
 from sklearn.datasets import fetch_20newsgroups
 from tools.text.preprocessing import OneOfMEncoder, char_table
@@ -19,6 +20,7 @@ def parse_args():
     parser.add_argument('--batch', default=128, type=int)
     parser.add_argument('--epoch', default=100, type=int)
     parser.add_argument('--gpu', default=-1, type=int)
+    parser.add_argument('--weight-decay', default=5e-4, type=float)
     return parser.parse_args()
 
 def main(args):
@@ -38,6 +40,7 @@ def main(args):
         model.use_gpu(gpu_id)
     opt = optimizers.MomentumSGD(args.lr)
     opt.setup(model)
+    opt.add_hook(chainer.optimizer.WeightDecay(args.weight_decay))
 
     batch_size = args.batch
     epoch = args.epoch
