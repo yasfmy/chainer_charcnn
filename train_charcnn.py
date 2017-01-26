@@ -4,18 +4,19 @@ from argparse import ArgumentParser
 import numpy as np
 import chainer
 from chainer import optimizers
-from sklearn.datasets import fetch_20newsgroups
+from sklearn.model_selection import train_test_split
 from tools.text.preprocessing import OneOfMEncoder, char_table
 from tools.iterator import ImageIterator, LabelIterator
 
 from lib.char_cnn import CharCNN
+from lib.dataset import fetch_ag_corpus
 
 def parse_args():
     parser = ArgumentParser()
-    parser.add_argument('--categories', default=20, type=int)
+    parser.add_argument('--categories', default=4, type=int)
     parser.add_argument('--length', default=1024, type=int)
-    parser.add_argument('--data_home', type=str,
-            default=os.path.expanduser('~/scikit_learn_data'))
+    parser.add_argument('--data_file', type=str,
+            default=os.path.abspath('./dataset/newsspace200.xml'))
     parser.add_argument('--lr', default=0.01, type=float)
     parser.add_argument('--batch', default=128, type=int)
     parser.add_argument('--epoch', default=100, type=int)
@@ -24,14 +25,14 @@ def parse_args():
     return parser.parse_args()
 
 def main(args):
-    data_home = args.data_home
-    train = fetch_20newsgroups(data_home=data_home, subset='train')
-    test = fetch_20newsgroups(data_home=data_home, subset='test')
+    dataset = fetch_ag_corpus(args.data_file)
+    title_train, title_test, desc_train, desc_test, label_train, label_test \
+        = train_test_split(dataset['title'], dataset['desc'], dataset['label'])
     one_of_m = OneOfMEncoder(char_table, char_table['unk'], args.length)
-    text_train = [[one_of_m.encode(d)] for d in train.data]
-    text_test = [[one_of_m.encode(d)] for d in test.data]
-    label_train = train.target
-    label_test = test.target
+    text_train = [[one_of_m.encode('{}\n{}'.format(t, d))]
+                    for t, d in zip(title_train, desc_train)]
+    text_test = [[one_of_m.encode('{}\n{}'.format(t, d))]
+                    for t, d in zip(title_test, desc_test)]
 
     model = CharCNN(args.length, args.categories)
     gpu_id = args.gpu
