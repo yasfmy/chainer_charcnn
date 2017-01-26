@@ -25,7 +25,7 @@ def fetch_ag_corpus(dest_path=None):
             process = Popen(command, stdout=outs)
             process.wait()
 
-    tree = ET.parse(os.path.expanduser('~/datasets/ag/newsspace200.xml'))
+    tree = ET.parse(dest_path)
     root = tree.getroot()
     categories = {'World': 0, 'Entertainment': 1, 'Sports': 2, 'Business': 3}
     title = [el.text for el in root.findall('title')]
@@ -38,4 +38,3 @@ def fetch_ag_corpus(dest_path=None):
             dataset['desc'].append(d)
             dataset['label'].append(categories[c])
     return dataset
-
