@@ -7,6 +7,8 @@ import requests
 def fetch_ag_corpus(dest_path=None):
     if dest_path is None:
         dest_path = os.path.abspath('./dataset/newsspace200.xml')
+    else:
+        dest_path = os.path.expanduser(dest_path)
     if not os.path.isfile(dest_path):
         print('downloading a file...')
         r = requests.get('https://www.di.unipi.it/~gulli/newsspace200.xml.bz',
