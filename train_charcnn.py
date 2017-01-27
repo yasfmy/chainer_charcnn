@@ -19,7 +19,7 @@ def parse_args():
     parser.add_argument('--lr', default=0.01, type=float)
     parser.add_argument('--momentum', default=0.9, type=float)
     parser.add_argument('--batch', default=128, type=int)
-    parser.add_argument('--epoch', default=100, type=int)
+    parser.add_argument('--epoch', default=5000, type=int)
     parser.add_argument('--gpu', default=-1, type=int)
     return parser.parse_args()
 
