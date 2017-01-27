@@ -21,11 +21,12 @@ def parse_args():
     parser.add_argument('--batch', default=128, type=int)
     parser.add_argument('--epoch', default=5000, type=int)
     parser.add_argument('--gpu', default=-1, type=int)
+    parser.add_argument('--seed', default=123456, type=int)
     return parser.parse_args()
 
 def main(args):
     title_train, title_test, desc_train, desc_test, label_train, label_test \
-        = fetch_ag_corpus(args.data_file)
+        = fetch_ag_corpus(args.data_file, args.seed)
     one_of_m = OneOfMEncoder(char_table, char_table['unk'], args.length)
     text_train = [[one_of_m.encode('{}\n{}'.format(t, d))]
                     for t, d in zip(title_train, desc_train)]
