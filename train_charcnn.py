@@ -42,16 +42,19 @@ def main(args):
     opt.setup(model)
 
     batch_size = args.batch
-    epoch = args.epoch
+    n_epoch = args.epoch
     N = len(label_train)
     N_test = len(label_test)
 
-    for i in range(epoch):
-        print('epoch: {}'.format(i + 1))
+    for i in range(n_epoch):
+        epoch = i + 1
+        print('epoch: {}'.format(epoch))
         order = np.random.permutation(N)
         text_iter = ImageIterator(text_train, batch_size, order=order, gpu=gpu_flag)
         label_iter = LabelIterator(label_train, batch_size, order=order, gpu=gpu_flag)
         sum_loss = 0
+        if epoch % 3 == 0 and epoch <= 30:
+            opt.lr /= 2
         for X, y in zip(text_iter, label_iter):
             model.cleargrads()
             loss = model.loss(X, y)
