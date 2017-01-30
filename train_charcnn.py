@@ -9,6 +9,7 @@ from tools.iterator import ImageIterator, LabelIterator
 
 from lib.char_cnn import CharCNN
 from lib.dataset import fetch_ag_corpus
+from lib.sampling import uniformly_sampling
 
 def parse_args():
     parser = ArgumentParser()
@@ -33,7 +34,8 @@ def main(args):
     text_test = [[one_of_m.encode('{}\n{}'.format(t, d))]
                     for t, d in zip(title_test, desc_test)]
 
-    model = CharCNN(args.length, args.categories)
+    categories = args.categories
+    model = CharCNN(args.length, categories)
     gpu_id = args.gpu
     gpu_flag = True if gpu_id >= 0 else False
     if gpu_flag:
@@ -49,7 +51,7 @@ def main(args):
     for i in range(n_epoch):
         epoch = i + 1
         print('epoch: {}'.format(epoch))
-        order = np.random.permutation(N)
+        order = uniformly_sampling(N, batch_size, categories)
         text_iter = ImageIterator(text_train, batch_size, order=order, gpu=gpu_flag)
         label_iter = LabelIterator(label_train, batch_size, order=order, gpu=gpu_flag)
         sum_loss = 0
