@@ -10,5 +10,5 @@ def uniformly_sampling(dataset_size, sample_size, categories):
     for i in range(0, each_sample_size, each_size):
         i_end = i + each_sample_size
         for j in range(categories):
-            order = np.concatenate((order, categories[j][i:i_end]))
+            order = np.concatenate((order, indices[j][i:i_end]))
     return order
