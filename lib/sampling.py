@@ -1,7 +1,6 @@
 import numpy as np
 
-def uniformly_sampling(sample_size, label, categories):
-    dataset_size = len(label)
+def uniformly_sampling(dataset_size, sample_size, categories):
     each_size = dataset_size // categories
     each_sample_size = sample_size // categories
     indices = []
