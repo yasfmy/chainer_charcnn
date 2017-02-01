@@ -1,3 +1,5 @@
+import os
+from datetime import datetime
 from math import ceil
 
 import chainer
@@ -10,6 +12,17 @@ class BaseModel(chainer.Chain):
     def use_gpu(self, gpu_id):
         cuda.get_device(gpu_id).use()
         self.to_gpu()
+
+    def save_model(self, filename, suffix=False):
+        if suffix:
+            now = datetime.now().strftime('%Y%m%d')
+            root, ext = os.path.splitext(filename)
+            filename = '{}{}{}'.format(root, now, ext)
+        self.to_cpu()
+        serializers.save_npz(filename, self)
+
+    def load_model(self, filename):
+        serializers.load_npz(filename, self)
 
 class CharCNN(BaseModel):
     def __init__(self, length, categories):

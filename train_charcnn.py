@@ -10,6 +10,7 @@ from tools.iterator import ImageIterator, LabelIterator
 from lib.char_cnn import CharCNN
 from lib.dataset import fetch_ag_corpus
 from lib.sampling import uniformly_sampling
+from lib.optimizer import save_opt, load_opt
 
 def parse_args():
     parser = ArgumentParser()
@@ -23,6 +24,8 @@ def parse_args():
     parser.add_argument('--epoch', default=5000, type=int)
     parser.add_argument('--gpu', default=-1, type=int)
     parser.add_argument('--seed', default=123456, type=int)
+    parser.add_argument('--model', default=None, type=str)
+    parser.add_argument('--opt', default=None, type=str)
     return parser.parse_args()
 
 def main(args):
@@ -36,12 +39,16 @@ def main(args):
 
     categories = args.categories
     model = CharCNN(args.length, categories)
+    if args.model:
+        model.load_model(args.model)
     gpu_id = args.gpu
     gpu_flag = True if gpu_id >= 0 else False
     if gpu_flag:
         model.use_gpu(gpu_id)
     opt = optimizers.MomentumSGD(args.lr, args.momentum)
     opt.setup(model)
+    if args.opt:
+       load_opt(opt, args.opt)
 
     batch_size = args.batch
     n_epoch = args.epoch
@@ -72,6 +79,9 @@ def main(args):
             accuracy = model.accuracy(X, y)
             sum_accuracy += accuracy.data * len(y)
         print('accuracy: {}'.format(sum_accuracy / N_test))
+
+    model.save_model('model/charcnn.model', True)
+    save_opt(opt, 'opt/charcnn.state', True)
 
 if __name__ == '__main__':
     args = parse_args()
