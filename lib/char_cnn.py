@@ -1,3 +1,4 @@
+import os
 from math import ceil
 
 import chainer
@@ -10,6 +11,13 @@ class BaseModel(chainer.Chain):
     def use_gpu(self, gpu_id):
         cuda.get_device(gpu_id).use()
         self.to_gpu()
+
+    def save_model(self, filename):
+        self.to_cpu()
+        serializers.save_npz(filename, self)
+
+    def load_model(self, filename):
+        serializers.load_npz(filename, self)
 
 class CharCNN(BaseModel):
     def __init__(self, length, categories):
