@@ -23,6 +23,7 @@ def parse_args():
     parser.add_argument('--epoch', default=5000, type=int)
     parser.add_argument('--gpu', default=-1, type=int)
     parser.add_argument('--seed', default=123456, type=int)
+    parser.add_argument('--model', default=None, type=str)
     return parser.parse_args()
 
 def main(args):
@@ -36,6 +37,8 @@ def main(args):
 
     categories = args.categories
     model = CharCNN(args.length, categories)
+    if args.model:
+        model.load_model(args.model)
     gpu_id = args.gpu
     gpu_flag = True if gpu_id >= 0 else False
     if gpu_flag:
@@ -72,6 +75,8 @@ def main(args):
             accuracy = model.accuracy(X, y)
             sum_accuracy += accuracy.data * len(y)
         print('accuracy: {}'.format(sum_accuracy / N_test))
+
+    model.save_model('model/charcnn.model')
 
 if __name__ == '__main__':
     args = parse_args()
