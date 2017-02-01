@@ -2,3 +2,5 @@ dataset/*
 !.gitkeep
 model/*
 !.gitkeep
+opt/*
+!.gitkeep
