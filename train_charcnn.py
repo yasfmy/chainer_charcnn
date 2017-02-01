@@ -80,8 +80,8 @@ def main(args):
             sum_accuracy += accuracy.data * len(y)
         print('accuracy: {}'.format(sum_accuracy / N_test))
 
-    model.save_model('model/charcnn.model')
-    save_opt(opt, 'opt/charcnn.state')
+    model.save_model('model/charcnn.model', True)
+    save_opt(opt, 'opt/charcnn.state', True)
 
 if __name__ == '__main__':
     args = parse_args()
