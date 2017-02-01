@@ -1,6 +1,6 @@
 import os
 import pickle
-from subprocess import check_output, Popen
+import bz2
 import xml.etree.ElementTree as ET
 from operator import itemgetter, add
 from functools import reduce
@@ -20,17 +20,14 @@ def fetch_ag_corpus(dest_path=None, shuffle_seed=0):
         print('downloading a file...')
         r = requests.get('https://www.di.unipi.it/~gulli/newsspace200.xml.bz',
                           stream=True)
-        compressed_file = xml_path + '.bz'
-        with open(compressed_file, 'wb') as f:
+        compressed_path = xml_path + '.bz'
+        with open(compressed_path, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
         print('expanding a file...')
-        expand_command = check_output(['which', 'bunzip2']).decode('utf-8').strip()
-        command = [expand_command, '-c', compressed_file]
-        with open(xml_path, 'wb') as outs:
-            process = Popen(command, stdout=outs)
-            process.wait()
+        with bz2.open(compressed_path) as ins, open(xml_path, 'wb') as outs:
+            outs.write(ins.read())
 
     pickle_file = 'newsspace200.pkl'
     pickle_path = os.path.join(dest_path, pickle_file)
@@ -49,7 +46,6 @@ def fetch_ag_corpus(dest_path=None, shuffle_seed=0):
                 dataset['label'].append(categories[c])
         with open(pickle_path, 'wb') as f:
             pickle.dump(dataset, f)
-            dataset = pickle.load(f)
     else:
         with open(pickle_path, 'rb') as f:
             dataset = pickle.load(f)
