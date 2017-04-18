@@ -65,8 +65,6 @@ def main(args):
         train_iter = ImageIterator(train_data, batch_size, order=order, gpu=gpu_flag)
         label_iter = LabelIterator(train_label, batch_size, order=order, gpu=gpu_flag)
         sum_loss = 0
-        if epoch % 3 == 0 and epoch <= 30:
-            opt.lr /= 2
         for X, y in zip(train_iter, label_iter):
             model.cleargrads()
             loss = model.loss(X, y)
