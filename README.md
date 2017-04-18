@@ -7,8 +7,6 @@ $ git clone https://github.com/yasfmy/chainer_charcnn.git
 $ cd chainer_charcnn
 $ git submodule init
 $ git submodule update
-$ cd tools
-$ python setup.py install
 ```
 
 ## Usage
