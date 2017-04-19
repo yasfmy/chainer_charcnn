@@ -72,8 +72,8 @@ def main(args):
             sum_loss += loss.data * len(y)
         print('loss: {}'.format(sum_loss / N))
 
-        test_iter = ImageIterator(test_data, batch_size, shuffle=False, gpu=gpu_flag)
-        label_iter = LabelIterator(test_label, batch_size, shuffle=False, gpu=gpu_flag)
+        test_iter = ImageIterator(test_data, batch_size, gpu=gpu_flag)
+        label_iter = LabelIterator(test_label, batch_size, gpu=gpu_flag)
         sum_accuracy = 0
         for X, y in zip(test_iter, label_iter):
             accuracy = model.accuracy(X, y)
