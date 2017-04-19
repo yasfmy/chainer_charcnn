@@ -12,7 +12,6 @@ from mltools.iterator import ImageIterator, LabelIterator
 from mltools.sampling import Sampling
 from char_cnn import CharCNN
 from dataset import AgCorpus
-from sampling import uniformly_sampling
 from optimizer import save_opt, load_opt
 
 def parse_args():
