@@ -5,7 +5,7 @@ import chainer.functions as F
 import chainer.links as L
 from chainer.initializers import Normal
 
-from tools.model import BaseModel
+from mltools.model import BaseModel
 
 class CharCNN(BaseModel):
     def __init__(self, length, categories):
