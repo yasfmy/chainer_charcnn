@@ -9,7 +9,7 @@ from chainer.optimizer import WeightDecay
 
 from mltools.preprocessing import String2Tensor, char_table
 from mltools.iterator import ImageIterator, LabelIterator
-from mltools.sampling import Sampling
+from mltools.sampling import Sampling, OrderIterator
 from mltools.trainer import ClassifierTrainer
 from char_cnn import CharCNN
 from dataset import AgCorpus
@@ -52,11 +52,15 @@ def main(args):
 
     batch_size = args.batch
     n_epoch = args.epoch
-    order_iter = Sampling.provide_uniformly_sampled_order(
-                            y_train, categories, batch_size)
+    order_iter = OrderIterator(Sampling.provide_uniformly_sampled_order(
+                                y_train, categories, batch_size))
+    x_train = ImageIterator(x_train, batch_size, order_iter, gpu=gpu_flag)
+    y_train = LabelIterator(y_train, batch_size, order_iter, gpu=gpu_flag)
+    x_test = ImageIterator(x_test, batch_size, gpu=gpu_flag)
+    y_test = LabelIterator(y_test, batch_size, gpu=gpu_flag)
 
     trainer = ClassifierTrainer(model, opt, x_train, y_train, x_test, y_test,
-                ImageIterator, LabelIterator, batch_size, order_iter, n_epoch)
+                                order_iter, n_epoch)
     trainer.run()
 
     model.save_model('model/charcnn.model', suffix=True)
